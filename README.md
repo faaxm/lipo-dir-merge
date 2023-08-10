@@ -13,3 +13,4 @@ $ python3 lipo-dir-merge.py <arm64-dir-tree> <x64-dir-tree> <universal-output-di
 
 ## Resources
 * [A blog post on using lipo to build universal binaries](https://www.f-ax.de/dev/2021/01/15/build-fat-macos-library.html)
+* [A blog post on building universal binaries with vcpkg](https://www.f-ax.de/dev/2022/11/09/how-to-use-vcpkg-with-universal-binaries-on-macos/)
