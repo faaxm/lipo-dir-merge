@@ -51,7 +51,7 @@ def find_and_merge_libs(src, dst):
 # write the universal binary to `dst`.
 def copy_file_or_merge_libs(src, dst, *, follow_symlinks=True):
     _, file_ext = os.path.splitext(src)
-    if file_ext == ".a":
+    if (file_ext == ".a") or (file_ext == ".dylib"):
         find_and_merge_libs(src, dst)
     else:
         shutil.copy2(src, dst, follow_symlinks=follow_symlinks)
