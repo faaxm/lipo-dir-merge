@@ -41,7 +41,7 @@ def find_and_merge_libs(src, dst):
     lib_in_secondary = os.path.join(secondary_path, rel_path)
 
     if os.path.exists(lib_in_secondary) == False:
-        print("Lib not found in secondary source: {lib_in_secondary}")
+        print(f"Lib not found in secondary source: {lib_in_secondary}")
         return
     
     merge_libs(src, lib_in_secondary, dst)
