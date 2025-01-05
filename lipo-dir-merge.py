@@ -57,5 +57,5 @@ def copy_file_or_merge_libs(src, dst, *, follow_symlinks=True):
         shutil.copy2(src, dst, follow_symlinks=follow_symlinks)
 
 # Use copytree to do most of the work, with our own `copy_function` doing a little bit
-# of magic in case of static libraries.
-shutil.copytree(primary_path, destination_path, copy_function=copy_file_or_merge_libs)
+# of magic in case of libraries.
+shutil.copytree(primary_path, destination_path, copy_function=copy_file_or_merge_libs, symlinks=True)
