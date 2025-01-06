@@ -29,6 +29,34 @@ secondary_path = sys.argv[2]
 destination_path = sys.argv[3]
 
 
+def is_macho(filepath: str) -> bool:
+    """
+    Checks if a file is a Mach-O binary by reading the first 4 bytes.
+
+    Args:
+        filepath: Path to the file to check
+
+    Returns:
+        True if it is a Mach-O file
+    """
+    # Mach-O magic numbers
+    MAGIC_64 = 0xCFFAEDFE  # 64-bit mach-o
+    MAGIC_32 = 0xCEFAEDFE  # 32-bit mach-o
+
+    try:
+        # Open file in binary mode and read first 4 bytes
+        with open(filepath, "rb") as f:
+            magic = int.from_bytes(f.read(4), byteorder="big")
+
+        if magic in (MAGIC_64, MAGIC_32):
+            return True
+        else:
+            return False
+
+    except (IOError, OSError):
+        return False
+
+
 # Merge the libraries at `src1` and `src2` and create a
 # universal binary at `dst`
 def merge_libs(src1, src2, dst):
@@ -51,7 +79,7 @@ def find_and_merge_libs(src, dst):
 # write the universal binary to `dst`.
 def copy_file_or_merge_libs(src, dst, *, follow_symlinks=True):
     _, file_ext = os.path.splitext(src)
-    if (file_ext == ".a") or (file_ext == ".dylib"):
+    if not os.path.islink(src) and (file_ext == ".a") or is_macho(src):
         find_and_merge_libs(src, dst)
     else:
         shutil.copy2(src, dst, follow_symlinks=follow_symlinks)
