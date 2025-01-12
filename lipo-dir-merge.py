@@ -8,17 +8,19 @@
 # Run it like this:
 #  `python3 lipo-dir-merge.py <arm64-dir-tree> <x64-dir-tree> <universal-output-dir>`
 
-import sys
-import shutil
 import os
+import shutil
 import subprocess
+import sys
 
 #
 # Make sure we got enough arguments on the command line
 #
 if len(sys.argv) < 4:
     print("Not enough args")
-    print(f"{sys.argv[0]} <primary directory> <other architecture source> <destination>")
+    print(
+        f"{sys.argv[0]} <primary directory> <other architecture source> <destination>"
+    )
     sys.exit(-1)
 
 # This is where we take most of the files from
@@ -62,6 +64,7 @@ def is_macho(filepath: str) -> bool:
 def merge_libs(src1, src2, dst):
     subprocess.run(["lipo", "-create", src1, src2, "-output", dst])
 
+
 # Find the library at `src` in the `secondary_path` and then
 # merge the two versions, creating a universal binary at `dst`.
 def find_and_merge_libs(src, dst):
@@ -71,8 +74,9 @@ def find_and_merge_libs(src, dst):
     if os.path.exists(lib_in_secondary) == False:
         print(f"Lib not found in secondary source: {lib_in_secondary}")
         return
-    
+
     merge_libs(src, lib_in_secondary, dst)
+
 
 # Either copy the file at `src` to `dst`, or, if it is a static
 # library, merge it with its version from `secondary_path` and
@@ -84,6 +88,9 @@ def copy_file_or_merge_libs(src, dst, *, follow_symlinks=True):
     else:
         shutil.copy2(src, dst, follow_symlinks=follow_symlinks)
 
+
 # Use copytree to do most of the work, with our own `copy_function` doing a little bit
 # of magic in case of libraries.
-shutil.copytree(primary_path, destination_path, copy_function=copy_file_or_merge_libs, symlinks=True)
+shutil.copytree(
+    primary_path, destination_path, copy_function=copy_file_or_merge_libs, symlinks=True
+)
